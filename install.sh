@@ -77,7 +77,8 @@ apt install -y \
   fd-find \
   fzf \
   ripgrep \
-  tldr
+  tldr \
+  stow
 print_success "Đã cài đặt các gói cơ bản"
 
 if confirm "Bạn có muốn cài đặt Wezterm không?"; then
