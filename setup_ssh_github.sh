@@ -38,3 +38,20 @@ xdg-open https://github.com/settings/ssh/new
 
 # 6. Gợi ý kiểm tra kết nối sau khi thêm
 echo "✅ Sau khi thêm key, hãy chạy: ssh -T git@github.com"
+
+#7.Cấu hình git username, email
+if [ -z "$(git config --global user.name)" ]; then
+    echo "🔧 Đang cấu hình git username..."
+    git config --global user.name "$GIT_USERNAME"
+    echo "✅ Đã cấu hình git username: $GIT_USERNAME"
+else
+    echo "✅ Git username đã được cấu hình: $(git config --global user.name)"
+fi
+
+if [ -z "$(git config --global user.email)" ]; then
+    echo "🔧 Đang cấu hình git email..."
+    git config --global user.email "$GITHUB_EMAIL"
+    echo "✅ Đã cấu hình git email: $GITHUB_EMAIL"
+else
+    echo "✅ Git email đã được cấu hình: $(git config --global user.email)"
+fi
