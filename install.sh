@@ -81,6 +81,16 @@ apt install -y \
   stow
 print_success "Đã cài đặt các gói cơ bản"
 
+if confirm "Bạn có muốn cài đặt fastfetch không?"; then
+  echo "Đang cài đặt fastfetch..."
+  add-apt-repository ppa:zhangsongcui3371/fastfetch
+  apt update -y
+  apt install -y fastfetch
+  print_success "Đã cài đặt fastfetch"
+fi
+
+
+
 if confirm "Bạn có muốn cài đặt Wezterm không?"; then
   echo "Đang cài đặt Wezterm..."
   curl -fsSL https://apt.fury.io/wez/gpg.key |  gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
