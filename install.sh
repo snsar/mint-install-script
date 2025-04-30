@@ -64,31 +64,65 @@ print_success "Cập nhật hệ thống hoàn tất"
 # Cài đặt các gói cơ bản
 print_section "CÀI ĐẶT CÁC GÓI CƠ BẢN"
 echo "Đang cài đặt các gói cơ bản..."
-dnf install -y \
+apt install -y \
   wget \
   curl \
   git \
   neovim \
   htop \
-  fastfetch \
   unzip \
-  p7zip \
-  p7zip-plugins \
   unrar \
   zsh \
-  
-#   util-linux-user
+  ca-certificates \
+  fd-find \
+  fzf \
+  ripgrep \
+  tldr
 print_success "Đã cài đặt các gói cơ bản"
 
+if confirm "Bạn có muốn cài đặt Wezterm không?"; then
+  echo "Đang cài đặt Wezterm..."
+  curl -fsSL https://apt.fury.io/wez/gpg.key |  gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' |  tee /etc/apt/sources.list.d/wezterm.list
+  apt update -y
+  apt install wezterm -y
+  print_success "Đã cài đặt Wezterm"
+fi
 
 if confirm "Bạn có muốn cài đặt Brave Browser không?"; then
-  echo "Đang cài đặt Brave Browser..."
+  echo "Đang cài đặt Brave Bro  wser..."
   curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
   echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-  apt update
-  apt install brave-browser
+  apt update -y
+  apt install -y brave-browser
   print_success "Đã cài đặt Brave Browser"
 fi
+
+if confirm "Bạn có muốn cài đặt Docker Engine không?"; then
+  echo "Đang cài đặt Docker Engine..."
+  # Add Docker's official GPG key:
+  apt update -y
+  install -m 0755 -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  chmod a+r /etc/apt/keyrings/docker.asc
+  # Add the repository to Apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt-get update -y
+  apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  print_success "Đã cài đặt Docker Engine"
+fi
+
+if confirm "Bạn có muốn cài đặt Papirus Icon Theme không?"; then
+  echo "Đang cài đặt Papirus Icon Theme..."
+  sudo add-apt-repository ppa:papirus/papirus
+  sudo apt-get update -y
+  sudo apt-get install -y papirus-icon-theme  # Papirus, Papirus-Dark, and Papirus-Light
+  print_success "Đã cài đặt Papirus Icon Theme"
+fi
+
 
 # Cài đặt các công cụ phát triển
 print_section "CÀI ĐẶT CÔNG CỤ PHÁT TRIỂN"
@@ -161,21 +195,24 @@ fi
 print_section "CÀI ĐẶT TIỆN ÍCH HỆ THỐNG"
 if confirm "Bạn có muốn cài đặt TLP (tiết kiệm pin cho laptop) không?"; then
   echo "Đang cài đặt TLP..."
-  
   print_success "Đã cài đặt và kích hoạt TLP"
 fi
 
 # Cài đặt các font
 print_section "CÀI ĐẶT FONT"
 if confirm "Bạn có muốn cài đặt các font phổ biến không?"; then
-  echo "Đang cài đặt các font phổ biến..."
-  
+  echo "Đang cài đặt các font phổ biến..."  
   print_success "Đã cài đặt các font phổ biến"
 fi
 
 # Cài đặt Vietnamese input method
 if confirm "Bạn có muốn cài đặt bộ gõ tiếng Việt (ibus-bamboo) không?"; then
-  
+  sudo add-apt-repository ppa:bamboo-engine/ibus-bamboo
+  sudo apt-get update -y
+  sudo apt-get install -y ibus ibus-bamboo --install-recommends
+  ibus restart
+  # Đặt ibus-bamboo làm bộ gõ mặc định
+  env DCONF_PROFILE=ibus dconf write /desktop/ibus/general/preload-engines "['BambooUs', 'Bamboo']" && gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'us'), ('ibus', 'Bamboo')]"
   print_success "Đã cài đặt ibus-bamboo"
   print_warning "Vui lòng đăng xuất và đăng nhập lại để áp dụng thay đổi"
   print_warning "Sau đó, vào Settings > Keyboard > Input Sources để thêm Vietnamese (Bamboo)"
