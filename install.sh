@@ -65,6 +65,7 @@ print_success "Cập nhật hệ thống hoàn tất"
 print_section "CÀI ĐẶT CÁC GÓI CƠ BẢN"
 echo "Đang cài đặt các gói cơ bản..."
 apt install -y \
+  software-properties-common \
   wget \
   curl \
   git \
@@ -78,7 +79,9 @@ apt install -y \
   fzf \
   ripgrep \
   tldr \
-  stow
+  stow \
+  tmux \
+  build-essential
 print_success "Đã cài đặt các gói cơ bản"
 
 if confirm "Bạn có muốn cài đặt fastfetch không?"; then
